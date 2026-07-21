@@ -1,7 +1,7 @@
 import { fieldDefinitions } from '../data/fieldDefinitions'
 import type { ConciergeApplication } from '../types'
 
-const STORAGE_KEY = 'finstreet-ai-concierge-demo-v1'
+const STORAGE_KEY = 'finstreet-ai-concierge-demo-v2'
 
 export function newApplication(): ConciergeApplication {
   return {
@@ -33,7 +33,7 @@ export async function createDemoApplication(application: ConciergeApplication) {
   await new Promise((resolve) => window.setTimeout(resolve, 1100))
   const completed: ConciergeApplication = {
     ...application,
-    applicationId: 'FSA-2026-00127',
+    applicationId: 'FSA-DEMO-00127',
     status: 'AI Intake Complete — Broker Review Required',
     confirmedByApplicant: true,
     createdAt: new Date().toISOString(),
