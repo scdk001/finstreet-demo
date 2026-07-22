@@ -1,7 +1,7 @@
 import type { ApplicationField, ChatMessage, ConciergeApplication, UploadedFile } from '../types'
 
 const configuredBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') ?? ''
-const SESSION_KEY = 'finstreet-ai-concierge-session-v1'
+const SESSION_KEY = 'hyna-ai-concierge-session-v1'
 
 export type ApiHealth = {
   ok: boolean

@@ -22,7 +22,7 @@ function newApplication(): ConciergeApplication {
 }
 
 before(async () => {
-  dataDir = await mkdtemp(path.join(os.tmpdir(), 'finstreet-api-'))
+  dataDir = await mkdtemp(path.join(os.tmpdir(), 'hyna-ai-api-'))
   app = await buildApp({ dataDir, uploadDir: path.join(dataDir, 'uploads'), aiMode: 'demo', requireRealAi: false })
 })
 
@@ -63,7 +63,7 @@ test('confirmed application is persisted and retrievable', async () => {
 })
 
 test('uploaded documents are stored with an explicit OCR boundary', async () => {
-  const boundary = 'finstreet-test-boundary'
+  const boundary = 'hyna-ai-test-boundary'
   const payload = Buffer.from([
     `--${boundary}`,
     'Content-Disposition: form-data; name="file"; filename="Demo Statement.pdf"',

@@ -67,7 +67,7 @@ export class OpenAiProvider implements AiProvider {
       safety_identifier: safetyIdentifier,
       max_output_tokens: 1200,
       instructions: [
-        'You are the FINSTREET AI Loan Concierge for an Australian non-bank lending prototype.',
+        'You are the Hyna AI Loan Concierge for an Australian non-bank lending workflow prototype.',
         'Collect and organise applicant-provided information for later human broker review.',
         'Never state or imply eligibility, pricing, approval, decline, serviceability success, or a final credit decision.',
         'Extract only facts explicitly present in the latest message or unambiguous calculations from supplied figures.',

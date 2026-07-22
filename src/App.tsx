@@ -1,5 +1,6 @@
 import { ChevronRight, LockKeyhole, ShieldCheck, Sparkles, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { AppearanceControl, type ThemeMode } from './components/AppearanceControl'
 import { ConciergeOrb } from './components/ConciergeOrb'
 import { ConversationPanel } from './components/ConversationPanel'
 import { LiveSummary } from './components/LiveSummary'
@@ -13,6 +14,11 @@ import type { ApplicationField, ChatMessage, ConciergeApplication, OrbState, Run
 
 const message = (role: ChatMessage['role'], body: string): ChatMessage => ({ id: `msg-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`, role, body, timestamp: new Date().toISOString() })
 const wait = (milliseconds: number) => new Promise((resolve) => window.setTimeout(resolve, milliseconds))
+const THEME_KEY = 'hyna-ai-concierge-theme-v1'
+
+function loadTheme(): ThemeMode {
+  return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark'
+}
 
 export default function App() {
   const [application, setApplication] = useState<ConciergeApplication>(() => loadApplication())
@@ -22,9 +28,14 @@ export default function App() {
   const [busy, setBusy] = useState(false)
   const [submitOpen, setSubmitOpen] = useState(false)
   const [notice, setNotice] = useState('')
+  const [theme, setTheme] = useState<ThemeMode>(loadTheme)
   const summaryRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => { saveApplication(application) }, [application])
+  useEffect(() => {
+    localStorage.setItem(THEME_KEY, theme)
+    document.documentElement.dataset.theme = theme
+  }, [theme])
   useEffect(() => {
     let active = true
     getApiHealth().then((health) => {
@@ -163,18 +174,19 @@ export default function App() {
   }
 
   const suggestions = useMemo(() => suggestedReplies(application.fields), [application.fields])
-  return <main className={`concierge-app ${expanded ? 'is-expanded' : ''}`}>
+  return <main className={`concierge-app theme-${theme} ${expanded ? 'is-expanded' : ''}`}>
     <div className="ambient-grid" /><div className="ambient-glow glow-one" /><div className="ambient-glow glow-two" />
-    <header className="site-header"><div className="brand"><span>FS</span><div><strong>FINSTREET</strong><small>AI LENDING PLATFORM</small></div></div><div className="powered">Powered by <strong>Hyna AI</strong></div></header>
+    <header className="site-header"><div className="brand"><span>HA</span><div><strong>HYNA AI</strong><small>AI LENDING PLATFORM</small></div></div><div className="header-actions"><div className="powered">Intelligent lending <strong>infrastructure</strong></div><AppearanceControl theme={theme} onChange={setTheme} /></div></header>
     <PortalButton applicationId={application.applicationId} onOpen={openPortal} />
+    <ConciergeOrb state={orbState} compact={expanded} progress={progress} onClick={() => { setExpanded(true); setOrbState(application.applicationId ? 'completed' : 'collecting') }} />
 
-    {!expanded ? <section className="hero"><div className="hero-kicker"><Sparkles size={12} /> Intelligent application intake</div><h1>AI Loan <em>Concierge</em></h1><p>Tell us what you’re looking to finance. Your AI loan concierge will organise the information and prepare your application for review.</p><ConciergeOrb state={orbState} progress={progress} onClick={() => { setExpanded(true); setOrbState(application.applicationId ? 'completed' : 'collecting') }} /><div className="hero-trust"><span><ShieldCheck size={13} /> Broker reviewed</span><span><LockKeyhole size={13} /> Prototype data only</span></div></section> : <section className="workspace">
-      <div className="workspace-intro"><div><span>FINSTREET AI INTAKE</span><h1>Your application, organised through conversation.</h1></div><ConciergeOrb state={orbState} compact progress={progress} onClick={() => setExpanded(true)} /></div>
+    {!expanded ? <section className="hero"><div className="hero-kicker"><Sparkles size={12} /> Intelligent application intake</div><h1>AI Loan <em>Concierge</em></h1><p>Tell us what you’re looking to finance. Your AI loan concierge will organise the information and prepare your application for review.</p><div className="hero-orb-space" aria-hidden="true" /><div className="hero-trust"><span><ShieldCheck size={13} /> Broker reviewed</span><span><LockKeyhole size={13} /> Prototype data only</span></div></section> : <section className="workspace">
+      <div className="workspace-intro"><div><span>HYNA AI INTAKE</span><h1>Your application, organised through conversation.</h1></div></div>
       <div className="workspace-grid" ref={summaryRef}><ConversationPanel messages={application.messages} suggestions={suggestions} progress={progress} files={application.files} busy={busy || runtime.availability === 'checking'} runtime={runtime} onSend={send} onUpload={upload} onMinimise={() => { setExpanded(false); setOrbState(application.applicationId ? 'completed' : 'idle') }} onStartOver={startOver} /><LiveSummary fields={application.fields} onUpdate={updateField} onConfirm={confirmField} onExplain={explain} /></div>
       <div className="completion-bar glass-panel"><div><small>{application.applicationId ? 'Application created' : ready ? 'Core information collected' : `${missing.length} required fields remaining`}</small><strong>{application.applicationId ? application.applicationId : ready ? 'Your application information is ready for broker review.' : 'Continue the conversation to complete your intake.'}</strong>{application.applicationId && <span>AI Intake Complete — Broker Review Required • Prototype data handoff</span>}</div><div><button type="button" className="text-button" onClick={() => summaryRef.current?.scrollIntoView({ behavior: 'smooth' })}>Review Summary</button>{application.applicationId ? <button type="button" className="primary-button" onClick={openPortal}>Open Application Portal <ChevronRight size={14} /></button> : <button type="button" className="primary-button" onClick={() => setSubmitOpen(true)}>Complete & Submit <ChevronRight size={14} /></button>}</div></div>
     </section>}
 
-    <footer><p>AI-assisted information collection only. All information must be reviewed by a broker. Loan eligibility, pricing and approval remain subject to FINSTREET and the relevant lender.</p><div><a href="#privacy">Privacy</a><span>Interactive partnership concept • Fictional demo data</span></div></footer>
+    <footer><p>AI-assisted information collection only. All information must be reviewed by a broker. Loan eligibility, pricing and approval remain subject to the relevant licensed lender.</p><div><a href="#privacy">Privacy</a><span>Interactive product concept • Fictional demo data</span></div></footer>
     {notice && <button type="button" className="toast" onClick={() => setNotice('')}><span>{notice}</span><X size={13} /></button>}
     {submitOpen && <div className="modal-backdrop" onClick={() => setSubmitOpen(false)}><section className="submit-modal glass-panel" onClick={(event) => event.stopPropagation()}><button type="button" aria-label="Close submission review" className="icon-button modal-close" onClick={() => setSubmitOpen(false)}><X size={15} /></button><small>Applicant confirmation</small><h2>{ready ? 'Ready for broker review' : 'Complete required information'}</h2><p>{ready ? 'Please confirm that the AI-organised information is accurate to the best of your knowledge. A broker will review every field before submission to a lender.' : 'The application cannot be created until the required fields below are provided.'}</p>{!ready && <ul>{missing.map((field) => <li key={field.id}>{field.label}</li>)}</ul>}<label className="confirmation"><input type="checkbox" checked={application.confirmedByApplicant} onChange={(event) => setApplication((current) => ({ ...current, confirmedByApplicant: event.target.checked }))} /><span>I confirm that I have reviewed the summary and understand this is not a loan approval.</span></label><button type="button" className="primary-button wide" disabled={!ready || !application.confirmedByApplicant || busy} onClick={complete}>{busy ? 'Creating application…' : 'Confirm & Create Application'}</button></section></div>}
   </main>

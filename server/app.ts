@@ -44,7 +44,7 @@ const acceptedMimeTypes = new Set([
 ])
 
 function createApplicationId() {
-  return `FSA-${new Date().getFullYear()}-${randomBytes(3).toString('hex').toUpperCase()}`
+  return `HYA-${new Date().getFullYear()}-${randomBytes(3).toString('hex').toUpperCase()}`
 }
 
 function classifyFile(filename: string) {
@@ -75,7 +75,7 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}) {
 
   app.get('/api/health', async () => ({
     ok: true,
-    service: 'finstreet-concierge-api',
+    service: 'hyna-ai-concierge-api',
     ai: {
       mode: config.aiMode,
       model: config.aiMode === 'openai' ? config.openAiModel : null,

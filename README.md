@@ -1,6 +1,6 @@
-# FINSTREET AI Loan Concierge
+# Hyna AI Loan Concierge
 
-An interactive, fictional AI-assisted loan intake prototype designed as the public entry point to the FINSTREET AI Lending Platform. The repository now contains both the React frontend and a local full-stack pilot API.
+An interactive, fictional AI-assisted loan intake prototype for the Hyna AI Lending Platform. The repository contains both the React frontend and a local full-stack pilot API.
 
 ## What is real in the pilot
 
@@ -90,7 +90,7 @@ See [INTEGRATION.md](./INTEGRATION.md) for the production architecture and remai
 
 ## Product and compliance boundary
 
-- This is an interactive partnership concept prepared by Hyna AI for FINSTREET, not evidence of an existing partnership or product.
+- This is an interactive Hyna AI product concept, not a production lending system or evidence of lender adoption.
 - All applicant and lending data shown in the prototype must be fictional.
 - AI assists information collection and organisation only.
 - Loan eligibility, pricing, responsible-lending assessment, approval, and decline remain human and lender decisions.
